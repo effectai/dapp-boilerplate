@@ -1,0 +1,121 @@
+<!-- 📚 Load in resources: [Vue, Bulma, Effect Network Styling]  -->
+<script src="https://unpkg.com/vue@3"></script>
+<link rel="stylesheet" href="https://unpkg.com/bulma@0.9.4/css/bulma.min.css">
+<link href="https://app.effect.network/force-defaults.css" rel="stylesheet" />
+
+<!-- Define template 📔 -->
+<div id="app" class="has-text-centered mx-auto">
+    <span>{{ message }}</span>
+    <div class="title">{{ title }}</div>
+
+    <hr>
+
+
+    <p class="has-text-left mx-auto" style="max-width: 600px;">
+        Here we can present the user with data we want them to work on. <br>
+        Note the use of the <code>${placeholder}</code> notation. <br>
+        We use the notation in order to load in data from a list of data. <br>
+        It is possible to have as many <code>${placeholder}</code> values as you want. <br>
+        Copy this template into: 
+        <a href="https://testnet.effect.network/campaigns/new" target="_blank" rel="noopener noreferrer">https://testnet.effect.network</a>
+        to take a look at how it will be rendered.
+    </p>
+
+    <code>
+        ${placeholder}
+        <br>
+        ${otherPlaceholder}
+    </code>
+
+    <hr>
+
+    <form class="container" style="max-width: 400px;">
+        <div class="subtitle">Form</div>
+
+        <p>
+            When a form is submitted all input fields get read and values are uploaded.
+        </p>
+
+        <br>
+
+        <div class="field">
+            <label for="" class="label">Increment</label>
+            <div class="control">
+                <button  @click.prevent="increment" class="button">Click Me</button>
+                <div>Tally: {{ tally }}</div>
+            </div>
+        </div>
+
+        <br>
+        
+        <div class="field">
+            <label for="" class="label">Name</label>
+            <div class="control">
+                <input v-model="inputText" type="text" class="" placeholder="Lorem Ipsum" />
+            </div>
+        </div>
+
+        <br>
+
+        <div class="field">
+            <label for="" class="label">Select</label>
+            <div class="control">
+                <div class="select">
+                    <select v-model="selectOption">
+                        <option v-for="option in options" :key="option">
+                            {{ option }}
+                        </option>
+                    </select>
+                  </div>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="field">
+            <label for="" class="label">Checkbox</label>
+            <div class="control">
+                <input type="checkbox" />
+            </div>
+        </div>
+
+        <br>
+
+        <button class="button" type="submit">Submit</button>
+    </form>
+
+    <hr>
+
+    <div class="subtitle">Any data in the input field will be submitted</div>
+    <div>
+        {{ inputText || "Lorem Ipsum" }}
+        <br>
+        {{ inputCheckbox }}
+        <br>
+        {{ selectOption }}
+    </div>
+</div>
+
+<!-- Define desired ofunctionality 🦀 -->
+<script>
+    const { createApp } = Vue;
+    createApp({        
+        data () {
+            return {
+                title: 'Effect Boilerplate',
+                tally: 0,
+                inputText: '',
+                inputCheckbox: false,
+                options: ['Aruba', 'Bonaire', 'Curacao'],
+                selectOption: null
+            }
+        },
+        methods: {
+            increment () {
+                this.tally += 1
+            }
+        }
+        
+    }).mount('#app')
+
+</script>
