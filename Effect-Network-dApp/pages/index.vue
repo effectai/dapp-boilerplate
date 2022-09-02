@@ -1,6 +1,5 @@
 <template>
   <section>
-    <nav-bar />
     <home-banner />
   </section>
 </template>

@@ -1,10 +1,10 @@
 <template>
   <div class="">
     <h2 v-if="!accountConnected" class="title">
-      3. Connect your wallet
+      Connect your wallet
     </h2>
     <h2 v-else class="title">
-      4. Submit to Effect Network
+      Submit to Effect Network
     </h2>
 
     <div v-if="accountConnected" class="box media">
@@ -23,18 +23,6 @@
           <p>
             <strong>{{ connectResponse.accountName }}</strong>
           </p>
-          <hr>
-          <p class="subtitle">
-            Balance
-          </p>
-          <p>
-            vEFX: <span :class="{'has-text-danger': efxAvailable === null && batchCost > vefxAvailable}">{{ vefxAvailable }} <i>{{ client.config.efxSymbol }}</i></span><br>
-            <span v-if="efxAvailable !== null">
-              EFX: <span>&nbsp;&nbsp;{{ efxAvailable }} <i>{{ client.config.efxSymbol }}</i></span><br>
-              Total: <span :class="{'has-text-danger': batchCost > (vefxAvailable + efxAvailable)}">{{ vefxAvailable + efxAvailable }} <i>{{ client.config.efxSymbol }}</i></span>
-            </span>
-          </p>
-          <p />
           <hr>
           <p class="subtitle">
             Order
@@ -64,16 +52,6 @@
               </tr>
             </tfoot>
           </table>
-
-          <p v-if="batchCost > (vefxAvailable + (efxAvailable ? efxAvailable : 0))" class="notification is-warning">
-            You do not have enough EFX to complete this order.
-            <br><br>
-            <a class="button is-fullwidth is-primary is-light" href="https://effect.network/token-page" target="_blank" rel="noopener noreferrer">
-              <span>Buy <i>EFX</i></span>
-                        &nbsp;&nbsp;
-              <span><font-awesome-icon class="mx-2 icon is-small" icon="fa-solid fa-arrow-up-right-from-square" /></span>
-            </a>
-          </p>
         </div>
       </div>
     </div>
@@ -105,7 +83,7 @@
             <button class="button is-outlined is-primary is-wide" @click="previousStep">
               Back
             </button>
-            <button type="submit" :disabled="batchCost > (vefxAvailable + (efxAvailable ? efxAvailable : 0))" :class="{'is-loading': loading}" class="button button is-primary is-wide mr-4">
+            <button type="submit" :class="{'is-loading': loading}" class="button button is-primary is-wide mr-4">
               Post tasks
             </button>
           </div>
@@ -125,11 +103,6 @@
           Go to results
         </a>
       </div>
-      <!-- <hr>
-            <button class="button">
-                New Order
-            </button> -->
-      </p>
     </div>
   </div>
 </template>
@@ -147,7 +120,6 @@ export default Vue.extend({
     return {
       createdBatchId: null,
       loading: false,
-      efxAvailable: null,
       account: null,
       client: null,
       campaignid: null,
@@ -169,43 +141,15 @@ export default Vue.extend({
     },
     batchCost () {
       return (this.batch.length * this.repetitions) * this.campaign.info.reward
-    },
-    efxLoading () {
-      return this.vefxAvailable === null || this.efxAvailable === null || this.efxPending === null
-    },
-    vefxAvailable () {
-      let balance = 0
-      if (this.account) {
-        const vAccountRows = this.account.vAccountRows
-        if (vAccountRows) {
-          this.getAccountBalance()
-          vAccountRows.forEach((row) => {
-            if (row.balance.contract === this.client.config.efxTokenContract) {
-              balance = parseFloat(row.balance.quantity)
-            }
-          })
-        }
-      }
-      return balance
     }
   },
   created () {
 
   },
   methods: {
-    // ...mapActions({
-    //   addTransaction: 'transaction/addTransaction'
-    // }),
     async uploadBatch () {
       this.paymentLoading = true
       try {
-        // do a deposit first if the user doesn't have enough vEFX
-        if (!this.account.address && this.batchCost > this.vefxAvailable) {
-          const amount = (this.batchCost - this.vefxAvailable)
-          console.log('trying to deposit..', amount)
-          await this.client.account.deposit(parseFloat(amount).toFixed(4)).catch(error => console.error('Failed to deposit', error))
-          console.log('deposit done')
-        }
         this.loading = true
 
         const content = {
@@ -222,26 +166,6 @@ export default Vue.extend({
         // this.$emit('success', 'Tasks successfuly uploaded to Effect Force!')
 
         console.log('batch created', this.createdBatchId)
-
-        const transaction = {
-          type: this.type,
-          campaign: {
-            id: this.campaign.id,
-            title: this.campaign.info.title,
-            description: this.campaign.info.description,
-            image: this.campaign.info.image,
-            reward: this.campaign.info.reward
-          },
-          batch: this.batch,
-          repetitions: this.repetitions,
-          account: this.account,
-          date: new Date(),
-          batchId: this.createdBatchId,
-          eos: result,
-          totalCost: this.batchCost
-        }
-        console.log('transaction', transaction)
-        // this.addTransaction(transaction)
       } catch (e) {
         this.$emit('error', e)
         console.error(e)
@@ -368,42 +292,6 @@ export default Vue.extend({
         this.accountConnected = false
         this.$emit('error', 'Login failed, try again.')
         console.error(error)
-      }
-    },
-    async getAccountBalance () {
-      if (this.accountConnected) {
-        if (!this.account.address) {
-          const efxRow = (await this.client.api.rpc.get_currency_balance(this.client.config.efxTokenContract, this.account.accountName, this.client.config.efxSymbol))[0]
-          if (efxRow) {
-            this.efxAvailable = parseFloat(efxRow.replace(` ${this.client.config.efxSymbol}`, ''))
-          } else {
-            this.efxAvailable = 0
-          }
-        } else {
-          // For now this doesn't add anything, as we can't deposit from BSC anyways
-          // const balance = await this.getBscEFXBalance(this.account.address)
-          // this.efxAvailable = parseFloat(balance)
-        }
-      }
-    },
-    async getBscEFXBalance (address) {
-      // balanceOf && decimals
-      const erc20JsonInterface = [
-        {
-          constant: true,
-          inputs: [{ name: '_owner', type: 'address' }],
-          name: 'balanceOf',
-          outputs: [{ name: 'balance', type: 'uint256' }],
-          type: 'function'
-        }
-      ]
-      const efxAddress = this.client.config.bscEfxTokenContract// Token contract address
-      const contract = new this.client.config.web3.eth.Contract(erc20JsonInterface, efxAddress)
-      try {
-        const balance = await contract.methods.balanceOf(address).call()
-        return this.client.config.web3.utils.fromWei(balance.toString())
-      } catch (error) {
-        console.error('Could not retrieve balance', error)
       }
     }
   }

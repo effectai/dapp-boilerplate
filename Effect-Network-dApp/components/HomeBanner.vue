@@ -36,7 +36,6 @@
 
             <div class="buttons">
               <nuxt-link to="/startorder" class="button is-primary is-large">Start</nuxt-link>
-              <nuxt-link to="/orders" class="button is-primary is-large">Orders</nuxt-link>
             </div>
           </div>
         </div>
@@ -44,22 +43,3 @@
     </section>
   </div>
 </template>
-
-<script>
-
-export default {
-  components: {
-  },
-  computed: {
-  },
-  methods: {
-    addTx () {
-    }
-  }
-}
-
-</script>
-
-<style>
-
-</style>

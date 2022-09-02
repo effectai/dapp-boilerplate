@@ -2,33 +2,19 @@
   <div class="section pt-6">
     <div class="columns">
       <div class="column is-three-fifths is-offset-one-fifth">
-        <div v-if="step === 1" id="step-1">
-          <h2 class="title">
-            1. Start
-          </h2>
-          <div class="control">
-            <div class="buttons is-centered px-6 mx-6">
-              <button class="button is-link is-light mt-3 is-fullwidth is-large" @click.prevent="type='test'; nextStep()">
-                <span><font-awesome-icon class="mx-2 icon is-small" icon="fa-solid fa-heart" /></span>
-                <span>&nbsp;Create New Task</span>
-              </button>
-            </div>
-          </div>
-        </div>
-
         <task-form
-          v-if="step === 2"
-          :campaign="campaigns[type]"
+          v-if="step === 1"
+          :campaign="campaign"
           @error="setErrorMessage"
           @setBatch="setBatch"
           @previousStep="previousStep()"
           @nextStep="nextStep()"
         />
         <wallet-login
-          v-if="step === 3"
+          v-if="step === 2"
           :repetitions="repetitions"
           :batch="batch"
-          :campaign="campaigns[type]"
+          :campaign="campaign"
           @previousStep="previousStep()"
           @error="setErrorMessage"
           @success="setSuccessMessage"
@@ -64,9 +50,7 @@ export default {
       account: null,
       effectsdk: null,
       efxAvailable: null,
-      campaigns: {
-        test: null
-      },
+      campaign: null,
       type: null,
       successMessage: null,
       errorMessage: null
@@ -77,7 +61,7 @@ export default {
   created () {
     // When the component is created we retrieve the campaigns
     console.log(this.$config)
-    this.getCampaigns()
+    this.getCampaign()
   },
   methods: {
     setSuccessMessage (msg) {
@@ -100,14 +84,24 @@ export default {
      * Get all campaign data from Effect Force
      * First initialize the SDK and then retrieve the campaigns
      */
-    async getCampaigns () {
+    async getCampaign () {
       try {
         this.effectsdk = new effectsdk.EffectClient('mainnet')
-        this.campaigns.test = await this.effectsdk.force.getCampaign(27)
+        this.campaign = await this.effectsdk.force.getCampaign(27)
+        this.campaign.placeholders = this.getPlaceholders(this.campaign.info.template)
+        console.log('this.campaign', this.campaign)
       } catch (error) {
         this.setErrorMessage(error)
         console.error(error)
       }
+    },
+
+    getPlaceholders (template) {
+      const placeholders = getMatches(
+        template,
+        /\$\{\s?(\w+)\s?\|?\s?(\w*)\s?\}/g
+      )
+      return [...new Set(placeholders)]
     },
     /**
      * Set the account to use for ordering
@@ -124,6 +118,15 @@ export default {
       this.repetitions = repetitions
     }
   }
+}
+function getMatches (string, regex, index) {
+  index || (index = 1) // default to the first capturing group
+  const matches = []
+  let match
+  while ((match = regex.exec(string))) {
+    matches.push(match[index])
+  }
+  return matches
 }
 </script>
 
