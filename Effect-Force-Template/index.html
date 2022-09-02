@@ -13,9 +13,9 @@
 
     <p class="has-text-left mx-auto" style="max-width: 600px;">
         Here we can present the user with data we want them to work on. <br>
-        Note the use of the <code>${placeholder}</code> notation: <code>&lt;img src="${image_url}"&gt;</code> <br>
+        Note the use of the <code>${place_holder}</code> notation: <code>&lt;img src="${place_holder}"&gt;</code> <br>
         We use the notation in order to load in data from a list of data. <br>
-        It is possible to have as many <code>${placeholder}</code> values as you want. <br>
+        It is possible to have as many <code>${place_holder}</code> values as you want. <br>
 
         <br>
         
@@ -42,14 +42,17 @@
     </p>
 
     <code>
-        ${placeholder}
+        ${place_holder}
         <br>
-        ${otherPlaceholder}
+        ${place_holder}
     </code>
 
     <hr>
 
-    <form class="container" style="max-width: 400px;">
+    <img src="${place_holder}" alt="Effect Network" >
+
+    <!-- Note use of @submit.prevent to use submitHandle method -->
+    <form class="container" style="max-width: 400px;" @submit.prevent="submitHandle">
         <div class="subtitle">Form</div>
 
         <p>
@@ -100,8 +103,8 @@
         </div>
 
         <br>
-
-        <button class="button" type="submit">Submit</button>
+        <!-- Note the use of @click.prevent to use submitHandle method -->
+        <button class="button" @click.prevent="submitHandle">Submit</button>
     </form>
 
     <hr>
@@ -133,6 +136,17 @@
         methods: {
             increment () {
                 this.tally += 1
+            },
+            /**
+             * Note the use of parent.postMessage to submit task values
+             */
+            submitHandle () {
+              parent.postMessage({'task': 'submit', 'values': {
+                "tally": this.tally, 
+                "text": this.inputText, 
+                "check": this.inputCheckbox, 
+                "selectOption": this.selectOption
+              }}, '*');
             }
         }
         
