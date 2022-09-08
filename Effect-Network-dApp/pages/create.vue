@@ -188,7 +188,7 @@
             <p class="mx-6 px-6 has-text-centered">
               <strong>Success!</strong><br>
               Your order has been successfuly posted to
-              <a :href="`https://app.effect.network/campaigns/${campaign.id}/${createdBatchId}`" target="_blank" rel="noopener noreferrer">Effect Force</a>
+              <a :href="`https://testnet.effect.network/campaigns/${campaign.id}/${createdBatchId}`" target="_blank" rel="noopener noreferrer">Effect Force</a>
               <br>
             </p>
           </div>
@@ -215,6 +215,9 @@ export default {
   name: 'Create',
   data () {
     return {
+      campaignId: 34,
+      env: 'testnet',
+      proxy: 'efxtaskproxy',
       loading: false,
       batch: [],
       repetitions: 1,
@@ -280,9 +283,11 @@ export default {
      */
     async getCampaign () {
       try {
-        this.effectsdk = new effectsdk.EffectClient('mainnet')
-        this.campaign = await this.effectsdk.force.getCampaign(27)
-        this.campaign.placeholders = this.getPlaceholders(this.campaign.info.template)
+        this.effectsdk = new effectsdk.EffectClient(this.env)
+        this.campaign = await this.effectsdk.force.getCampaign(this.campaignId)
+        if (this.campaign) {
+          this.campaign.placeholders = this.getPlaceholders(this.campaign.info.template)
+        }
         console.log('this.campaign', this.campaign)
       } catch (error) {
         this.setErrorMessage(error)
@@ -335,7 +340,7 @@ export default {
         await console.log('uploading batch', content)
         // Show how user can set up their own proxy contract in order to post tasks.
         const result = await this.client.force
-          .createBatch(this.campaign.id, content, Number(this.repetitions), 'efxtaskproxy')
+          .createBatch(this.campaign.id, content, Number(this.repetitions), this.proxy)
         console.log('tx result', result)
         this.createdBatchId = await this.client.force.getBatchId(result.id, this.campaign.id)
         console.log('batch created with id', this.createdBatchId)
@@ -373,7 +378,7 @@ export default {
     generateClient () {
       console.log('Creating SDK...')
       try {
-        this.client = new effectsdk.EffectClient('mainnet')
+        this.client = new effectsdk.EffectClient(this.env)
         console.log(this.client)
       } catch (error) {
         console.error(error)
