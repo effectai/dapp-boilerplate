@@ -185,7 +185,8 @@
             <p class="mx-6 px-6 has-text-centered">
               <strong>Success!</strong><br>
               Your order has been successfuly posted to
-              <a :href="`https://app.effect.network/campaigns/${campaign.id}/${createdBatchId}`" target="_blank" rel="noopener noreferrer">Effect Force</a>
+              <a v-if="env === 'mainnet'" :href="`https://app.effect.network/campaigns/${campaign.id}/${createdBatchId}`" target="_blank" rel="noopener noreferrer">Effect Force</a>
+              <a v-else :href="`https://app.effect.network/campaigns/${campaign.id}/${createdBatchId}`" target="_blank" rel="noopener noreferrer">Effect Force</a>
               <br>
             </p><hr>
             <div class="buttons is-centered">
