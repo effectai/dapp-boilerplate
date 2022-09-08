@@ -185,9 +185,14 @@
             <p class="mx-6 px-6 has-text-centered">
               <strong>Success!</strong><br>
               Your order has been successfuly posted to
-              <a :href="`https://testnet.effect.network/campaigns/${campaign.id}/${createdBatchId}`" target="_blank" rel="noopener noreferrer">Effect Force</a>
+              <a :href="`https://app.effect.network/campaigns/${campaign.id}/${createdBatchId}`" target="_blank" rel="noopener noreferrer">Effect Force</a>
               <br>
-            </p>
+            </p><hr>
+            <div class="buttons is-centered">
+              <a :href="'/batch/' + createdBatchId" class="mx-6 px-6 button is-centered " target="" rel="noopener noreferrer">
+                Go to results
+              </a>
+            </div>
           </div>
         </div>
 
@@ -212,9 +217,9 @@ export default {
   name: 'Create',
   data () {
     return {
-      campaignId: 34,
-      env: 'testnet',
-      proxy: 'efxtaskproxy',
+      campaignId: 27, // USE OWN CAMPAIGN ID HERE
+      env: 'mainnet',
+      proxy: null, // optional use proxy
       loading: false,
       batch: [],
       repetitions: 1,
@@ -335,9 +340,8 @@ export default {
           tasks: this.batch.map(el => ({ place_holder: el.place_holder }))
         }
         await console.log('uploading batch', content)
-        // Show how user can set up their own proxy contract in order to post tasks.
         const result = await this.client.force
-          .createBatch(this.campaign.id, content, Number(this.repetitions), this.proxy)
+          .createBatch(this.campaign.id, content, Number(this.repetitions), this.proxy ? this.proxy : null)
         console.log('tx result', result)
         this.createdBatchId = await this.client.force.getBatchId(result.id, this.campaign.id)
         console.log('batch created with id', this.createdBatchId)
