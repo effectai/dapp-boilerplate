@@ -80,9 +80,6 @@
           <form>
             <div class="field is-grouped is-justify-content-center mt-6">
               <div class="control">
-                <button class="button is-outlined is-primary is-wide" @click="previousStep">
-                  Back
-                </button>
                 <button type="submit" :class="{'is-loading': loading}" class="button button is-primary is-wide mr-4" :disabled="!batch.length" @click="nextStep">
                   Next step
                 </button>
