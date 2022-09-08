@@ -40,7 +40,7 @@
               <br>
 
               <div class="buttons">
-                <nuxt-link to="/startorder" class="button is-primary is-large">
+                <nuxt-link to="/create" class="button is-primary is-large">
                   Start
                 </nuxt-link>
               </div>
