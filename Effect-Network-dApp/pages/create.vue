@@ -212,6 +212,7 @@ import AnchorLink from 'anchor-link'
 import AnchorLinkBrowserTransport from 'anchor-link-browser-transport'
 
 export default {
+  name: 'Create',
   data () {
     return {
       loading: false,
@@ -332,13 +333,12 @@ export default {
           tasks: this.batch.map(el => ({ place_holder: el.place_holder }))
         }
         await console.log('uploading batch', content)
-        // // Show how user can set up their own proxy contract in order to post tasks.
-        // const result = await this.client.force
-        //   .createBatch(this.campaign.id, content, Number(this.repetitions), 'efxtaskproxy')
-        //   .catch(error => console.error('Failed to create batch', error))
-        // console.log('tx result', result)
-        // this.createdBatchId = await this.client.force.getBatchId(result.id, this.campaign.id)
-        // console.log('batch created', this.createdBatchId)
+        // Show how user can set up their own proxy contract in order to post tasks.
+        const result = await this.client.force
+          .createBatch(this.campaign.id, content, Number(this.repetitions), 'efxtaskproxy')
+        console.log('tx result', result)
+        this.createdBatchId = await this.client.force.getBatchId(result.id, this.campaign.id)
+        console.log('batch created with id', this.createdBatchId)
       } catch (e) {
         this.setErrorMessage(e)
         console.error(e)
@@ -475,6 +475,3 @@ function getMatches (string, regex, index) {
   return matches
 }
 </script>
-
-<style>
-</style>
