@@ -6,7 +6,7 @@
           <div class="columns is-vcentered">
             <div class="column is-three-fifths">
               <h1 class="title is-1 is-spaced has-background-white-blur">
-                Effect Network dApp
+                Metaverse Tasks
               </h1>
               <h1 class="subtitle has-background-white-blur">
                 Boilerplate Nuxt dApp so that you can quickly get connected with Effect Force.
