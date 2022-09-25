@@ -6,10 +6,10 @@ This repository is a boilerplate for building dApps on the Effect Network. It is
 
 There are two folders in this repository:
 
-1. [Effect-Network-dApp](./Effect-Network-dApp/)
+1. [Effect-Network-dApp](./)
 2. [Effect-Force-Template](./Effect-Force-Template/)
 
-The first folder is a basic example web application built with Vue that uses the Effect Network JavaScript SDK to interact with the Effect Network. They are called Effect Network dApps; they allow users to create and post tasks on the Effect Force.
+The first folder, the one you are in right now; is a basic example web application built with Vue that uses the Effect Network JavaScript SDK to interact with the Effect Network. They are called Effect Network dApps; they allow users to create and post tasks on the Effect Force.
 The second folder is an example campaign [template](https://developer.effect.network/effect_network/template.html) built with Vue for Effect Force. The contents of `index.html` are created with the (effect-js)(https://github.com/effectai/effect-js) library or created with [Effect-Force](https://app.effect.network/campaigns/new).
 
 ## Medium Article
