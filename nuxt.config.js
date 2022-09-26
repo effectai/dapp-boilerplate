@@ -17,7 +17,7 @@ export default {
 
   // Add router for github pages
   router: {
-    base: '/dApp-Label-Image/'
+    base: '/dapp-boilerplate/'
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
