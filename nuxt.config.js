@@ -15,6 +15,11 @@ export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
 
+  // Add router for github pages
+  router: {
+    base: '/dApp-Label-Image/'
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'Effect-Network-dApp',
